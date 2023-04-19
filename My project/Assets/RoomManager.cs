@@ -1,58 +1,43 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RoomManager : MonoBehaviour
 {
-    public enum Room {
-        House,
-        Garden,
-        Basement,
-    }
-    
-    public Room activeRoom;
+    [SerializeField] private List<GameObject> rooms;
+    [SerializeField] private GameObject player;
 
-    private GameObject house;
-    private GameObject garden;
-    private GameObject basement;
+    private int currentRoomIndex = 0;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        house = GameObject.Find("House");
-        garden = GameObject.Find("Garden");
-        basement = GameObject.Find("Basement");
-
-        ActivateRoom(Room.House);
+        // Initialize the rooms by disabling all rooms except the first one
+        for (int i = 1; i < rooms.Count; i++)
+        {
+            rooms[i].SetActive(false);
+        }
     }
 
-    void OnTriggerEnter2D(Collider2D other) {
-        if (other.CompareTag("House")) {
-            ActivateRoom(Room.House);
-        } else if (other.CompareTag("Garden")) {
-            ActivateRoom(Room.Garden);
-        } else if (other.CompareTag("Basement")) {
-            ActivateRoom(Room.Basement);
+    private void Update()
+    {
+        // Press the "N" key to switch to the next room
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            SwitchToNextRoom();
         }
-        Debug.Log("thingy did");
     }
 
-    void ActivateRoom(Room room) {
-        // Deactivate all rooms
-        house.SetActive(false);
-        garden.SetActive(false);
-        basement.SetActive(false);
+    private void SwitchToNextRoom()
+    {
+        // Deactivate the current room
+        rooms[currentRoomIndex].SetActive(false);
 
-        // Activate the specified room
-        if (room == Room.House) {
-            house.SetActive(true);
-        } else if (room == Room.Garden) {
-            garden.SetActive(true);
-        } else if (room == Room.Basement) {
-            basement.SetActive(true);
-        }
+        // Update the current room index
+        currentRoomIndex = (currentRoomIndex + 1) % rooms.Count;
 
-        // Update the active room
-        activeRoom = room;
+        // Activate the next room
+        rooms[currentRoomIndex].SetActive(true);
+
+        // Teleport the player to the new room
+        player.transform.position = rooms[currentRoomIndex].transform.position + Vector3.up * 2;
     }
 }
