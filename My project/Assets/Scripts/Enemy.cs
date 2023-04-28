@@ -59,7 +59,7 @@ public class Enemy : MonoBehaviour
              if(temp1 < 2 || temp2 < 2){
                  //transform.position.x += temp1;
                 //transform.position.y += temp2;
-                 transform.position = new Vector3((temp1/100000000) + transform.position.x, temp2/(100000000) + transform.position.y,0);
+                 transform.position = new Vector3((temp1/100000000) + transform.position.x, temp2/(100000000) + transform.position.y,2);
          }
         }
     }
